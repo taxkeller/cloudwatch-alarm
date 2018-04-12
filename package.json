@@ -5,6 +5,14 @@
   "repository": "git@github.com:taxkeller/cloudwatch-alarm.git",
   "author": "Tasuku Kera <t_kerara@yahoo.co.jp>",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true,
+    "coverageDirectory": "./coverages",
+    "collectCoverage": true
+  },
   "dependencies": {
     "aws-sdk-mock": "^1.7.0",
     "babel-core": "^6.26.0",
@@ -14,12 +22,15 @@
     "babel-preset-stage-3": "^6.24.1",
     "babel-runtime": "^6.26.0",
     "eslint": "^4.19.1",
-    "jest": "^22.4.3",
     "serverless-jest-plugin": "^0.1.6",
     "serverless-kms-secrets": "^1.0.2",
     "serverless-offline": "^3.20.1",
     "serverless-webpack": "^5.1.1",
     "webpack": "^4.5.0",
     "webpack-node-externals": "^1.7.2"
+  },
+  "devDependencies": {
+    "jest": "^22.4.3",
+    "babel-jest": "^22.4.3"
   }
 }

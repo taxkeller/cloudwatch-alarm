@@ -11,6 +11,7 @@ export const fetchMetric = (data) => {
     await cloudwatchlogs.describeMetricFilters(params, async (err, metric) => {
       if (isFailedDescribeMetricFilters(err, metric)) {
         reject(`Failed to describe metric filters`);
+        return;
       }
 
       const eventParams = {
@@ -22,6 +23,7 @@ export const fetchMetric = (data) => {
       await cloudwatchlogs.filterLogEvents(eventParams, (err, event) => {
         if (isFailedFilterLogEvents(err, event)) {
           reject(`Failed to filter log events`);
+          return;
         }
         const result = {
           logGroupName: metric.metricFilters[0].logGroupName,

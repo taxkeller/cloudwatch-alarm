@@ -7,14 +7,14 @@ export const main = (event, context, callback) => {
     .then(getRequest)
     .then(fetchMetric)
     .then(postMessage)
-    .then((body) => { success(body, callback); })
+    .then((body) => { callback(null, 'Success'); })
     .catch((e) => { 
       postMessage({
         logGroupName: 'Error',
         logStreamName: 'Alert-error',
         message: (typeof e === 'object') ? e.message : e
       });
-      failure(e, callback);
+      callback(null, 'Failure');
     })
   ;
 };
@@ -34,7 +34,7 @@ const getRequest = (data) => {
       return {
         metricName: trigger.MetricName,
         metricNamespace: trigger.Namespace,
-        timestamp: Date.parse(timestamp) - 300000
+        timestamp: Date.parse(timestamp) - 360000
       };
     })
     .catch((e) => { throw new Error(e); })

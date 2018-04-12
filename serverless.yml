@@ -19,12 +19,16 @@ service: cloudwatch-alarm
 
 plugins:
   - serverless-webpack
+  - serverless-kms-secrets
   - serverless-offline
 
 custom:
   webpackIncludeModules: true
   serverless-offline:
     port: 4000
+  serverless-kms-secrets:
+    secretsFile: secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml
+  kmsSecrets: ${file(secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
 
 provider:
   name: aws
@@ -32,7 +36,7 @@ provider:
 
 # you can overwrite defaults here
   stage: dev
-  region: ap-northeast-1
+  region: ap-southeast-1
 
 # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
@@ -41,11 +45,15 @@ provider:
         - logs:DescribeMetricFilters
         - logs:FilterLogEvents
       Resource: arn:aws:logs:*:*:*
+    - Effect: Allow
+      Action:
+        - KMS:Decrypt
+      Resource: ${self:custom.kmsSecrets.keyArn}
+
 
 # you can define service wide environment variables here
   environment:
-    slackUrl: https://hooks.slack.com/services/path/to/incoming/webhook
-    slackChannel: channel
+    secretInfo: ${self:custom.kmsSecrets.secrets.secretInfo}
     region: ${self:provider.region}
 
 # you can add packaging information here
@@ -64,11 +72,11 @@ functions:
       - sns:
           topicName: monitoring
           displayName: Server monitoring
-      #- http:
-      #    path: /
-      #    method: post
-      #    cors: true
-      #    authorizer: false
+     # - http:
+     #     path: /
+     #     method: post
+     #     cors: true
+     #     authorizer: false
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
